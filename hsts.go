@@ -1,4 +1,4 @@
-package middlewares
+package HSTS
 
 import (
 	"strconv"
@@ -16,7 +16,7 @@ type (
 	}
 )
 
-func HSTS(configuration HSTSConfiguration) innerHSTS {
+func Prepare(configuration HSTSConfiguration) innerHSTS {
 	return innerHSTS{strictTransportSecurity: "max-age=" + strconv.Itoa(configuration.MaxAge) + "; includeSubDomains; preload"}
 }
 
