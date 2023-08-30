@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"errors"
 	"strconv"
 
 	"github.com/valyala/fasthttp"
@@ -9,15 +8,13 @@ import (
 
 type (
 	HSTSConfiguration struct {
-		MaxAge int
+		MaxAge int `json:"max_age"`
 	}
 
 	innerHSTS struct {
 		strictTransportSecurity string
 	}
 )
-
-var ErrHSTSInsecureConnection = errors.New("insecure connection")
 
 func HSTS(configuration HSTSConfiguration) innerHSTS {
 	return innerHSTS{strictTransportSecurity: "max-age=" + strconv.Itoa(configuration.MaxAge) + "; includeSubDomains; preload"}
@@ -39,8 +36,6 @@ func (HSTS innerHSTS) Handler(source fasthttp.RequestHandler) fasthttp.RequestHa
 
 			header.SetStatusCode(fasthttp.StatusMovedPermanently)
 			header.SetBytesV(fasthttp.HeaderLocation, uri.FullURI())
-
-			context.SetBodyString(ErrHSTSInsecureConnection.Error())
 		}
 	}
 }
